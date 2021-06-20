@@ -8,6 +8,7 @@
       </div>
       <!-- 登录表单区域 -->
       <el-form
+        ref="loginFormRef"
         :model="form"
         label-width="0px"
         class="login_form"
@@ -30,8 +31,8 @@
         </el-form-item>
         <!-- 按钮区域 -->
         <el-form-item class="btns">
-          <el-button type="primary">login</el-button>
-          <el-button type="info">resetting</el-button>
+          <el-button type="primary" v-on:click="login">login</el-button>
+          <el-button type="info" v-on:click="resetting">resetting</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -43,8 +44,8 @@ export default {
   data () {
     return {
       form: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       loginFormRules: {
         username: [
@@ -56,6 +57,26 @@ export default {
           { min: 5, max: 10, message: 'The length should be between 5 and 10 characters', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    resetting: function () {
+      this.$refs.loginFormRef.resetFields()
+    },
+    login: function () {
+      this.$refs.loginFormRef.validate(async status => {
+        if (!status) { return '' }
+        const { data: result } = await this.$http.post('login', this.form)
+        if (result.meta.status !== 200) {
+          return this.$message.error('Login Failed. Please login to our system again!')
+        } else {
+          this.$message.success('Login successful')
+          // 1.将登录成功之后的token保存到sessionstorage
+          // console.log(result)
+          window.sessionStorage.setItem('token', result.data.token)
+          this.$router.push('/home')
+        }
+      })
     }
   }
 }
