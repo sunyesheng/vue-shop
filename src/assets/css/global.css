@@ -1,10 +1,22 @@
-html,body,#app{
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    -moz-user-select: none; /*火狐*/
-    -webkit-user-select: none; /*webkit浏览器*/
-    -ms-user-select: none; /*IE10*/
-    -khtml-user-select: none; /*早期浏览器*/
-    user-select: none;
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -moz-user-select: none; /*火狐*/
+  -webkit-user-select: none; /*webkit浏览器*/
+  -ms-user-select: none; /*IE10*/
+  -khtml-user-select: none; /*早期浏览器*/
+  user-select: none;
+}
+.el-breadcrumb {
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+.el-card {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
+}
+.el-pagination {
+  margin-top: 15px;
 }

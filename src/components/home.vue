@@ -17,10 +17,11 @@
             <div class="toggle-button" @click="toggleClick">|||</div>
                 <!-- 侧边栏菜单区 -->
                     <el-menu
+                        :default-active='activePath'
                         :router="true"
                         :collapse-transition="false"
                         :collapse="isCollapse"
-                        unique-opened="true"
+                        :unique-opened="true"
                         background-color="#333744"
                         text-color="#fff"
                         active-text-color="#409BFF">
@@ -32,7 +33,7 @@
                                 <span slot="title">{{item.authName}}</span>
                             </template>
                             <!-- 二级菜单 -->
-                            <el-menu-item :index="'/'+childitem.path" v-for="childitem in item.children" :key="childitem.id">
+                            <el-menu-item @click="saveNavstate('/'+childitem.path)" :index="'/'+childitem.path" v-for="childitem in item.children" :key="childitem.id">
                                 <template slot="title">
                                 <i class="el-icon-menu"></i>
                                 <span>{{childitem.authName}}</span>
@@ -64,7 +65,8 @@ export default {
         102: 'iconfont icon-danju',
         145: 'iconfont icon-baobiao'
       },
-      isCollapse: false
+      isCollapse: false,
+      activePath: ''
     }
   },
   methods: {
@@ -83,10 +85,15 @@ export default {
     // 实现点击折叠
     toggleClick () {
       this.isCollapse = !this.isCollapse
+    },
+    saveNavstate (path) {
+      window.sessionStorage.setItem('activePath', path)
+      this.activePath = path
     }
   },
   created () {
     this.getMeunList()
+    this.activePath = window.sessionStorage.getItem('activePath')
   }
 }
 </script>

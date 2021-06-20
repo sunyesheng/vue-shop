@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "default-passive-events": "^2.0.0",
     "element-ui": "^2.4.5",
     "file-loader": "^4.3.0",
     "style-loader": "^2.0.0",
