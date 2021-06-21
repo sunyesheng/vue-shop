@@ -50,7 +50,48 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180"></el-table-column>
+        <el-table-column label="操作" width="260">
+          <template slot-scope="scope">
+            <el-tooltip
+              effect="dark"
+              content="修改用户"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                size="mini"
+                @click="showEditDialog(scope.row.id)"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip
+              effect="dark"
+              :enterable="false"
+              content="删除用户"
+              placement="top"
+            >
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                @click="renmoveUserById(scope.row.id)"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip
+              effect="dark"
+              content="分配角色"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button
+                type="warning"
+                icon="el-icon-setting"
+                size="mini"
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- 分页区域 -->
       <el-pagination
@@ -88,14 +129,39 @@
             <el-input v-model="addForm.email"></el-input>
           </el-form-item>
           <el-form-item label="手机" prop="mobile">
-            <el-input v-model="addForm.mobile"></el-input> </el-form-item
+            <el-input v-model="addForm.mobile"></el-input></el-form-item
         ></el-form>
         <span slot="footer" class="dialog-footer">
           <!-- 底部区域 -->
           <el-button @click="addDiologVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addDiologVisible = false"
-            >确 定</el-button
-          >
+          <el-button type="primary" @click="addUser">确 定</el-button>
+        </span>
+      </el-dialog>
+      <el-dialog
+        title="修改用户信息"
+        :visible.sync="editDialogVisible"
+        width="30%"
+        @close="editDialogClosed"
+      >
+        <el-form
+          :model="editForm"
+          :rules="addFormRules"
+          ref="editFormRef"
+          label-width="70px"
+        >
+          <el-form-item label="用户名">
+            <el-input v-model="editForm.username" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="editForm.email"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" prop="mobile">
+            <el-input v-model="editForm.mobile"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editUserInfo">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -129,6 +195,8 @@ export default {
       },
       userList: [],
       totel: 0,
+      // 控制修改对话框的显示与隐藏
+      editDialogVisible: false,
       addDiologVisible: false,
       addForm: {
         username: '',
@@ -136,6 +204,8 @@ export default {
         email: '',
         mobile: ''
       },
+      // 查询修改的用户信息
+      editForm: {},
       addFormRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -186,8 +256,90 @@ export default {
     },
     resgiter () {
       this.$refs.addFormRef.resetFields()
+    },
+    // 添加用户
+    addUser () {
+      this.$refs.addFormRef.validate(async (valid) => {
+        // console.log(valid)
+        if (!valid) { return false }
+        const { data: res } = await this.$http.post('users', this.addForm)
+        if (res.meta.status !== 201) {
+          this.$message.error('添加用户失败')
+        }
+        this.$message.success('添加用户成功')
+        // 隐藏添加用户的表格
+        this.addDiologVisible = false
+        // 重新获取用户列表
+        this.getUserList()
+      })
+    },
+    // 展示编辑用户的对话框
+    async showEditDialog (id) {
+      const { data: res } = await this.$http.get('users/' + id)
+      if (res.meta.status !== 200) {
+        return this.$message.error('查询修改用户信息失败')
+      }
+      this.editForm = res.data
+      // console.log(res.data)
+      this.editDialogVisible = true
+      // console.log(id)
+    },
+    // 监听修改用户对话框的关闭
+    editDialogClosed () {
+      this.$refs.editFormRef.resetFields()
+    },
+    // 修改用户信息并且提交 绑定到确定按钮
+    editUserInfo () {
+      this.$refs.editFormRef.validate(async (valid) => {
+        // console.log(valid)
+        if (!valid) {
+          return false
+        }
+        // 发起修改用户的请求
+        const { data: res } = await this.$http.put('users/' + this.editForm.id, {
+          email: this.editForm.email,
+          mobile: this.editForm.mobile
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error('更新用户信息失败')
+        }
+        // 关闭对话框
+        this.editDialogVisible = false
+        // 刷新数据列表
+        this.getUserList()
+        // 提示修改成功
+        this.$message.success('更新用户信息成功')
+      })
+    },
+    // 根据id删除信息
+    async renmoveUserById (id) {
+      // 弹框询问是否删除
+      console.log(id)
+      await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        const { data: res } = await this.$http.delete('users/' + id)
+        if (res.meta.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          return this.getUserList()
+        } else {
+          return this.$message({
+            type: 'info',
+            message: '删除失败'
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
-
   },
   created () {
     this.getUserList()
