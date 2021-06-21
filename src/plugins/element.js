@@ -24,9 +24,11 @@ import {
   Pagination,
   Dialog,
   Tooltip,
-  MessageBox
+  MessageBox,
+  Tag
 } from 'element-ui'
 
+Vue.use(Tag)
 Vue.use(Button)
 Vue.use(Dialog)
 Vue.use(Form)
