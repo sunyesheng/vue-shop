@@ -16,7 +16,9 @@
     "style-loader": "^2.0.0",
     "url-loader": "^2.3.0",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "vue-table-tree-grid": "^0.2.4",
+    "vue-table-with-tree-grid": "^0.2.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
