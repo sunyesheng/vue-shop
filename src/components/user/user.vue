@@ -88,6 +88,7 @@
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
+                @click="setRole(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -165,6 +166,31 @@
         </span>
       </el-dialog>
     </el-card>
+    <!-- 分配角色的对话框 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="setRolediolgo"
+      width="30%"
+      @close="seletdeRoleId = ''"
+    >
+      <p>当前用户：{{ userInfo.username }}</p>
+      <p>当前角色：{{ userInfo.role_name }}</p>
+      <p>
+        <el-select v-model="seletdeRoleId" placeholder="请选择">
+          <el-option
+            v-for="item in rolesList"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRolediolgo = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -187,6 +213,14 @@ export default {
       callback(new Error('请输入合法的手机号'))
     }
     return {
+      // 选中的id值
+      seletdeRoleId: '',
+      // 所有角色的数据列表
+      rolesList: [],
+      // 需要被分配角色的对话框
+      userInfo: '',
+      // 控制分配角色对话框的显示与
+      setRolediolgo: false,
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
@@ -339,6 +373,31 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 展示分配角色的对话框
+    async setRole (userinfo) {
+      this.userInfo = userinfo
+      // 在展示对话框之前 获取所有列表
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取角色列表失败')
+      }
+      this.rolesList = res.data
+      this.setRolediolgo = true
+    },
+    async saveRoleInfo () {
+      if (!this.seletdeRoleId) {
+        return this.$message.error('请选择角色')
+      }
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`, {
+        rid: this.seletdeRoleId
+      })
+      if (res.meta.status !== 200) {
+        this.$message.error('分配角色信息失败')
+      }
+      this.$message.success('分配角色成功')
+      this.getUserList()
+      this.setRolediolgo = false
     }
   },
   created () {
