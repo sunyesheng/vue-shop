@@ -11,6 +11,7 @@ import orders from '../components/order/orders.vue'
 import reports from '../components/reports/reports.vue'
 import right from '../components/role/right.vue'
 import roles from '../components/role/roles.vue'
+import add from '../components/goods/add.vue'
 
 Vue.use(VueRouter)
 
@@ -29,27 +30,38 @@ const routes = [
       {
         path: '/users',
         component: Users
-      }, {
+      },
+      {
         path: '/categories',
         component: categories
-      }, {
+      },
+      {
         path: '/goods',
         component: goods
-      }, {
+      },
+      {
         path: '/params',
         component: params
-      }, {
+      },
+      {
         path: '/orders',
         component: orders
-      }, {
+      },
+      {
         path: '/reports',
         component: reports
-      }, {
+      },
+      {
         path: '/rights',
         component: right
-      }, {
+      },
+      {
         path: '/roles',
         component: roles
+      },
+      {
+        path: '/goods/add',
+        component: add
       }
     ]
   }
