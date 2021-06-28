@@ -104,7 +104,7 @@ export default {
 </script>
 <style scoped>
 .el-steps {
-  margin-top: 25px;
+  margin-top: 24px;
 }
 .el-step__title {
   font-size: 10px;
