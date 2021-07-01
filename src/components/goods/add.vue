@@ -83,7 +83,7 @@ export default {
     return {
       // 进度条的步骤
       activeIndex: '0',
-      // 添加商品的表单数据对象
+      // 添加商品的表单数据的对象
       addForm: {
         goods_name: '',
         goods_price: 0,
