@@ -34,9 +34,13 @@ import {
   Tabs,
   TabPane,
   Steps,
-  Step
+  Step,
+  Checkbox,
+  CheckboxGroup
 } from 'element-ui'
 
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
 Vue.use(Steps)
 Vue.use(Step)
 Vue.use(Tabs)

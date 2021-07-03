@@ -7,7 +7,7 @@
       <el-breadcrumb-item>商品列表</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
-      <el-row :gutter="20">
+      <el-row :gutter="20" class="first">
         <el-col :span="8">
           <el-form>
             <!-- 搜索输入框 -->
@@ -148,4 +148,7 @@ export default {
 }
 </script>
 <style scoped>
+.first {
+  margin-bottom: 15px;
+}
 </style>
