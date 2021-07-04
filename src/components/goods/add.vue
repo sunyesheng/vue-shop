@@ -278,9 +278,6 @@ export default {
         from.attrs = this.addForm.attrs
         // 发起请求添加商品 商品的名称必须是唯一的
         const { data: res } = await this.$http.post('goods', from)
-        console.log('====================================')
-        console.log(res)
-        console.log('====================================')
         if (res.meta.status !== 201) {
           return this.$message.error('添加商品失败')
         }

@@ -16,7 +16,7 @@
         </el-col>
       </el-row>
       <!-- 角色列表表格区 -->
-      <el-table :data="roleList" border stripe>
+      <el-table :data="roleList" border stripe row-key="id">
         <el-table-column type="expand">
           <template slot-scope="scope">
             <el-row
@@ -193,7 +193,6 @@ export default {
           return this.$message.error('添加失败')
         }
         this.$message.success('添加成功')
-        console.log(res)
         this.rolesDialogVisible = false
         this.getRoleList()
       })
@@ -208,7 +207,6 @@ export default {
       this.getRoleList()
     },
     changeRoles (id) {
-      // console.log(id)
       this.$message.error('功能暂未实现')
     },
     // 展示分配权限对话框
@@ -221,7 +219,6 @@ export default {
       }
       // 获取到的权限数据保存到data中
       this.rightLists = res.data
-      console.log(this.rightLists)
       // 丢鬼获取三级权限的结点
       this.getLeafKeys(role, this.defKeys)
       this.setRightVisible = true
@@ -247,7 +244,6 @@ export default {
         ...this.$refs.treeRef.getCheckedKeys(),
         ...this.$refs.treeRef.getHalfCheckedKeys()
       ]
-      // console.log(keys)
       const idStr = keys.join(',')
       const { data: res } = await this.$http.post(`roles/${this.roleId}/rights`, {
         rids: idStr
