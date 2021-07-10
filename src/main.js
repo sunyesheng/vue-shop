@@ -14,7 +14,7 @@ import nprogress from 'nprogress'
 // 将富文本编辑器注册为全局可用
 Vue.use(VueQuillEditor)
 Vue.prototype.$http = axios
-axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+axios.defaults.baseURL = 'http://127.0.0.1:8899/api/private/v1/'
 // 添加拦截器 在请求拦截器显示进度条 在相应拦截器隐藏进度条
 axios.interceptors.response.use(config => {
   nprogress.done()
