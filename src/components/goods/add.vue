@@ -15,6 +15,7 @@
           center
           show-icon
           :closable="false"
+          :size="mini"
         >
         </el-alert>
         <!-- 不步骤条区域 -->
